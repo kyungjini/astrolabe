@@ -1,0 +1,1275 @@
+/* Astrolabe Widget Styles */
+
+/* ===== Parent Container Fix ===== */
+/* Target parent output containers to ensure transparent background */
+.jp-OutputArea-output:has(.astrolabe-root),
+.widget-output:has(.astrolabe-root),
+.output_wrapper:has(.astrolabe-root),
+.output:has(.astrolabe-root),
+.cell-output-ipywidget-background:has(.astrolabe-root) {
+  background: transparent !important;
+}
+
+/* ===== CSS Variables for Theming ===== */
+/* Theme strategy: VS Code vars (priority) -> Jupyter vars -> defaults */
+:root {
+  /* Backgrounds */
+  --astrolabe-bg-primary: var(--vscode-editor-background, var(--jp-layout-color1, rgba(255, 255, 255, 0.95)));
+  --astrolabe-bg-secondary: var(--vscode-sideBar-background, var(--jp-layout-color2, rgba(248, 249, 250, 0.95)));
+  --astrolabe-bg-tertiary: var(--vscode-input-background, rgba(241, 243, 245, 0.95));
+  
+  /* Borders */
+  --astrolabe-border: var(--vscode-editorWidget-border, var(--jp-border-color1, #dee2e6));
+  --astrolabe-graph-border: var(--vscode-editorWidget-border, var(--jp-border-color1, #dee2e6));
+  
+  /* Text */
+  --astrolabe-text-primary: var(--vscode-editor-foreground, var(--jp-ui-font-color1, #212529));
+  --astrolabe-text-secondary: var(--vscode-descriptionForeground, var(--jp-ui-font-color2, #495057));
+  --astrolabe-text-tertiary: var(--vscode-disabledForeground, #6c757d);
+  
+  /* Accent Colors */
+  --astrolabe-accent-primary: #3b82f6;
+  --astrolabe-accent-secondary: #60a5fa;
+  --astrolabe-highlight: #ffcc00;
+  --astrolabe-success: #10b981;
+  --astrolabe-warning: #f59e0b;
+  --astrolabe-danger: #ef4444;
+  
+  /* Components Mapping */
+  --astrolabe-sidebar-bg: var(--astrolabe-bg-secondary);
+  --astrolabe-sidebar-border: var(--astrolabe-border);
+  --astrolabe-graph-bg: var(--astrolabe-bg-primary);
+  
+  /* Controls */
+  --astrolabe-controls-bg: rgba(17, 24, 39, 0.85);
+  --astrolabe-controls-text: #ffffff;
+  --astrolabe-controls-border: rgba(255, 255, 255, 0.3);
+  
+  /* Feature Items */
+  --astrolabe-feature-bg: var(--astrolabe-bg-primary);
+  --astrolabe-feature-bg-hover: var(--astrolabe-bg-tertiary);
+  --astrolabe-feature-bg-selected: rgba(255, 204, 0, 0.15); /* Subtle highlight like dark mode */
+  --astrolabe-feature-border: var(--astrolabe-border);
+  --astrolabe-feature-border-selected: rgba(255, 204, 0, 0.6); /* Add border highlight */
+  
+  /* Transitions */
+  --astrolabe-transition-fast: 200ms;
+  --astrolabe-transition-normal: 300ms;
+  --astrolabe-transition-slow: 500ms;
+  
+  /* Spacing */
+  --astrolabe-spacing-xs: 4px;
+  --astrolabe-spacing-sm: 8px;
+  --astrolabe-spacing-md: 12px;
+  --astrolabe-spacing-lg: 16px;
+  --astrolabe-spacing-xl: 20px;
+  
+  /* Border Radius */
+  --astrolabe-radius-sm: 4px;
+  --astrolabe-radius-md: 6px;
+  --astrolabe-radius-lg: 8px;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --astrolabe-bg-primary: rgba(30, 30, 30, 0.98); /* Neutral dark gray, less blue */
+  --astrolabe-bg-secondary: rgba(30, 30, 30, 0.98); /* Same as primary for unified look */
+  --astrolabe-bg-tertiary: rgba(45, 45, 45, 0.98);
+  --astrolabe-border: #404040;
+  --astrolabe-text-primary: #e4e6eb;
+  --astrolabe-text-secondary: #b0b3b8;
+  --astrolabe-text-tertiary: #8a8d93;
+  
+  --astrolabe-sidebar-bg: var(--astrolabe-bg-secondary);
+  --astrolabe-graph-bg: var(--astrolabe-bg-primary);
+  
+  --astrolabe-controls-bg: rgba(0, 0, 0, 0.75);
+  --astrolabe-controls-text: #ffffff;
+  
+  --astrolabe-feature-bg: var(--astrolabe-bg-primary);
+  --astrolabe-feature-bg-hover: var(--astrolabe-bg-tertiary);
+  --astrolabe-feature-bg-selected: rgba(255, 204, 0, 0.25); /* Slightly more visible */
+  --astrolabe-feature-border: var(--astrolabe-border);
+  --astrolabe-feature-border-selected: rgba(255, 204, 0, 0.6); /* Add border highlight */
+  /* hidden-gem variables removed */
+}
+
+/* ===== AnyWidget Root Container ===== */
+.astrolabe-root {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  display: block;
+}
+
+/* ===== Main Layout ===== */
+.astrolabe-wrapper {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  min-height: 500px;
+  max-height: 800px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 4px;
+  background: transparent;
+  color: var(--astrolabe-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border-radius: var(--astrolabe-radius-lg);
+  overflow: hidden;
+}
+
+.astrolabe-wrapper.astrolabe-plot-only {
+  height: auto;
+  aspect-ratio: 16 / 9;
+  min-height: 420px;
+  max-height: 78vh;
+}
+
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-sidebar,
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-sidebar-toggle-btn,
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-graph-container,
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-network-help-btn,
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-help-panel {
+  display: none !important;
+}
+
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-content {
+  width: 100%;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-plot-container {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  /* Ensure plot-only has a definite block so %-heights resolve and overlays receive hits */
+  min-height: min(380px, 70vh);
+  height: 100%;
+  overflow: visible;
+}
+
+.astrolabe-wrapper.astrolabe-plot-only .astrolabe-vega-wrapper {
+  min-height: 0;
+  height: 100% !important;
+  overflow: hidden;
+}
+
+/* Theme is controlled by JavaScript via data-theme attribute */
+/* No automatic dark mode via media query - we detect IDE/notebook background instead */
+
+/* ===== Sidebar ===== */
+.astrolabe-sidebar {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  height: 100%;
+  background: var(--astrolabe-sidebar-bg);
+  border: 2px solid var(--astrolabe-graph-border);
+  border-radius: var(--astrolabe-radius-lg);
+  padding: 12px 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width var(--astrolabe-transition-normal), 
+              background-color var(--astrolabe-transition-normal), 
+              border-color var(--astrolabe-transition-normal),
+              padding var(--astrolabe-transition-normal);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* Sidebar scrollbar - Light Mode */
+.astrolabe-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.astrolabe-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.astrolabe-sidebar::-webkit-scrollbar-thumb {
+  background: #adb5bd; /* Light gray for light mode */
+  border-radius: 4px;
+}
+
+.astrolabe-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #6c757d; /* Darker gray on hover for light mode */
+}
+
+/* Dark Mode sidebar scrollbar */
+[data-theme="dark"] .astrolabe-sidebar::-webkit-scrollbar-thumb {
+  background: #5a5f6e; /* Lighter gray for dark mode */
+}
+
+[data-theme="dark"] .astrolabe-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #8a8d93; /* Even lighter on hover for dark mode */
+}
+
+/* Collapsed sidebar */
+.astrolabe-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  height: 100%;
+  padding: 0;
+  border: none;
+  overflow: visible; /* Allow toggle button to be visible */
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.astrolabe-sidebar.collapsed > *:not(.astrolabe-sidebar-toggle-btn) {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Sidebar toggle button - positioned relative to graph container */
+/* Button position: fixed at top-left corner of graph container */
+.astrolabe-sidebar-toggle-btn {
+  position: absolute;
+  top: 8px;
+  left: calc(220px + 4px + 8px);
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid var(--astrolabe-border);
+  background: var(--astrolabe-sidebar-bg);
+  color: var(--astrolabe-text-primary);
+  border-radius: 50%;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--astrolabe-transition-normal);
+  z-index: 1001;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Button position when sidebar is collapsed */
+.astrolabe-wrapper.sidebar-collapsed .astrolabe-sidebar-toggle-btn {
+  left: 12px;  /* Left margin from wrapper edge */
+}
+
+.astrolabe-sidebar-toggle-btn:hover {
+  background: var(--astrolabe-feature-bg-hover);
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.astrolabe-sidebar-toggle-btn:active {
+  transform: scale(1.0);
+}
+
+.astrolabe-sidebar-title {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--astrolabe-text-primary);
+  margin-bottom: var(--astrolabe-spacing-md);
+  border-bottom: 2px solid var(--astrolabe-border);
+  padding-bottom: var(--astrolabe-spacing-sm);
+  transition: color var(--astrolabe-transition-normal), border-color var(--astrolabe-transition-normal);
+}
+
+.astrolabe-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--astrolabe-spacing-sm);
+  margin-bottom: var(--astrolabe-spacing-xl);
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: var(--astrolabe-spacing-xs);
+}
+
+/* Custom scrollbar for features list - Light Mode */
+.astrolabe-features-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.astrolabe-features-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.astrolabe-features-list::-webkit-scrollbar-thumb {
+  background: #adb5bd; /* Light gray for light mode */
+  border-radius: 3px;
+}
+
+.astrolabe-features-list::-webkit-scrollbar-thumb:hover {
+  background: #6c757d; /* Darker gray on hover for light mode */
+}
+
+/* Dark Mode scrollbar */
+[data-theme="dark"] .astrolabe-features-list::-webkit-scrollbar-thumb {
+  background: #5a5f6e; /* Lighter gray for dark mode */
+}
+
+[data-theme="dark"] .astrolabe-features-list::-webkit-scrollbar-thumb:hover {
+  background: #8a8d93; /* Even lighter on hover for dark mode */
+}
+
+/* ===== Feature Items ===== */
+.astrolabe-feature-item {
+  padding: 10px 12px;
+  background: var(--astrolabe-feature-bg);
+  border: 1.5px solid var(--astrolabe-feature-border);
+  border-radius: var(--astrolabe-radius-md);
+  cursor: pointer;
+  transition: all var(--astrolabe-transition-fast);
+  display: flex;
+  align-items: center;
+}
+
+.astrolabe-feature-item:hover {
+  background: var(--astrolabe-feature-bg-hover);
+  transform: translateX(4px);
+  border-color: var(--astrolabe-accent-primary);
+}
+
+.astrolabe-feature-item.selected {
+  background: var(--astrolabe-feature-bg-selected);
+  border: 2px solid var(--astrolabe-feature-border-selected);
+  box-shadow: 0 2px 8px rgba(255, 204, 0, 0.2);
+}
+
+/* hidden-gem styles removed */
+
+.astrolabe-feature-name-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0; /* Allow text truncation */
+}
+
+.astrolabe-feature-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.astrolabe-feature-rank {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--astrolabe-text-secondary);
+  min-width: 32px;
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  transition: color var(--astrolabe-transition-fast);
+}
+
+.astrolabe-feature-item.selected .astrolabe-feature-rank {
+  color: var(--astrolabe-text-primary);
+}
+
+.astrolabe-feature-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--astrolabe-text-primary);
+  transition: color var(--astrolabe-transition-fast);
+}
+
+.astrolabe-feature-importance {
+  font-size: 11px;
+  color: var(--astrolabe-text-secondary);
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  transition: color var(--astrolabe-transition-fast);
+}
+
+.astrolabe-feature-item.selected .astrolabe-feature-importance {
+  color: var(--astrolabe-text-primary);
+}
+
+/* ===== Threshold Section ===== */
+.astrolabe-threshold-section {
+  margin-top: var(--astrolabe-spacing-xl);
+  padding-top: var(--astrolabe-spacing-xl);
+  border-top: 2px solid var(--astrolabe-border);
+  transition: border-color var(--astrolabe-transition-normal);
+}
+
+.astrolabe-threshold-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--astrolabe-text-primary);
+  margin-bottom: var(--astrolabe-spacing-md);
+  transition: color var(--astrolabe-transition-normal);
+}
+
+.astrolabe-threshold-container {
+  margin-bottom: var(--astrolabe-spacing-lg);
+  position: relative; /* For histogram overlay positioning */
+}
+
+.astrolabe-threshold-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.astrolabe-threshold-text {
+  font-size: 13px;
+  color: var(--astrolabe-text-secondary);
+  transition: color var(--astrolabe-transition-normal);
+}
+
+/* Histogram Overlay */
+.astrolabe-histogram-overlay {
+  position: absolute;
+  top: -140px; /* Position above the slider */
+  left: 0;
+  right: 0;
+  background: var(--astrolabe-bg-primary);
+  border: 1px solid var(--astrolabe-border);
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  pointer-events: none; /* Don't block mouse events */
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.astrolabe-histogram-label {
+  font-size: 12px;
+  color: var(--astrolabe-text-secondary);
+  text-align: center;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Histogram bar styles */
+.histogram-bar {
+  fill: #888;
+  opacity: 0.8;
+}
+
+/* Dark theme histogram adjustments */
+[data-theme="dark"] .astrolabe-histogram-overlay {
+  background: var(--astrolabe-bg-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .histogram-bar {
+  fill: #fff !important;
+  opacity: 0.7 !important;
+}
+
+.astrolabe-threshold-slider {
+  width: 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--astrolabe-border);
+  outline: none;
+  transition: background var(--astrolabe-transition-normal);
+}
+
+.astrolabe-threshold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+  transition: background var(--astrolabe-transition-fast), transform var(--astrolabe-transition-fast);
+}
+
+.astrolabe-threshold-slider::-webkit-slider-thumb:hover {
+  background: #333;
+  transform: scale(1.1);
+}
+
+.astrolabe-threshold-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+  border: none;
+  transition: background var(--astrolabe-transition-fast), transform var(--astrolabe-transition-fast);
+}
+
+.astrolabe-threshold-slider::-moz-range-thumb:hover {
+  background: #333;
+  transform: scale(1.1);
+}
+
+/* Dark mode slider thumb */
+[data-theme="dark"] .astrolabe-threshold-slider::-webkit-slider-thumb {
+  background: #fff;
+}
+
+[data-theme="dark"] .astrolabe-threshold-slider::-webkit-slider-thumb:hover {
+  background: #e0e0e0;
+}
+
+[data-theme="dark"] .astrolabe-threshold-slider::-moz-range-thumb {
+  background: #fff;
+}
+
+[data-theme="dark"] .astrolabe-threshold-slider::-moz-range-thumb:hover {
+  background: #e0e0e0;
+}
+
+/* ===== Action Buttons ===== */
+.astrolabe-action-buttons {
+  display: flex;
+  gap: var(--astrolabe-spacing-sm);
+  margin-top: var(--astrolabe-spacing-lg);
+  padding-top: var(--astrolabe-spacing-lg);
+  border-top: 1px solid var(--astrolabe-border);
+}
+
+/* Sidebar utility buttons (save/help/theme) under thresholds */
+.astrolabe-sidebar-mini-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--astrolabe-border);
+}
+
+.astrolabe-sidebar-mini-btn {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  padding: 0;
+  border: 1px solid var(--astrolabe-border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--astrolabe-transition-fast);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="dark"] .astrolabe-sidebar-mini-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-sidebar-mini-btn:hover {
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.08);
+}
+
+/* Network panel floating controls (reset + save) */
+.astrolabe-network-floating-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.astrolabe-network-floating-controls > * {
+  pointer-events: auto;
+}
+
+.astrolabe-network-floating-controls .astrolabe-reset-btn,
+.astrolabe-network-floating-controls .astrolabe-network-save-btn {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--astrolabe-border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+[data-theme="dark"] .astrolabe-network-floating-controls .astrolabe-reset-btn,
+[data-theme="dark"] .astrolabe-network-floating-controls .astrolabe-network-save-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-network-floating-controls .astrolabe-reset-btn:hover,
+.astrolabe-network-floating-controls .astrolabe-network-save-btn:hover {
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.1);
+}
+
+.astrolabe-reset-btn {
+  position: absolute;
+  top: 8px;
+  right: 72px; /* Position left of help button (32px button + 8px gap + 32px theme button + 8px gap) */
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid var(--astrolabe-border);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  border-radius: 50%;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--astrolabe-transition-fast);
+  z-index: 1002;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .astrolabe-reset-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-reset-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .astrolabe-reset-btn:hover {
+  background: rgba(37, 41, 54, 0.95);
+}
+
+.astrolabe-reset-btn:active {
+  transform: scale(1.0);
+}
+
+.astrolabe-theme-toggle-btn {
+  position: absolute;
+  top: 8px;
+  right: 40px; /* Position between reset and help button */
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid var(--astrolabe-border);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  border-radius: 50%;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--astrolabe-transition-fast);
+  z-index: 1002;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  line-height: 1;
+}
+
+/* When theme/help buttons are used in sidebar controls, override absolute graph placement */
+.astrolabe-sidebar-mini-controls .astrolabe-theme-toggle-btn,
+.astrolabe-sidebar-mini-controls .astrolabe-network-help-btn {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  z-index: auto;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  font-size: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .astrolabe-theme-toggle-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-theme-toggle-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .astrolabe-theme-toggle-btn:hover {
+  background: rgba(37, 41, 54, 0.95);
+}
+
+.astrolabe-theme-toggle-btn:active {
+  transform: scale(1.0);
+}
+
+/* ===== Content Area ===== */
+/* Content area width: remaining space excluding sidebar */
+.astrolabe-content {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background: transparent; /* Let notebook background show through */
+  transition: background-color var(--astrolabe-transition-normal);
+  flex-shrink: 0; /* Prevent content from shrinking */
+  align-self: stretch; /* Stretch to match wrapper height */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row; /* Side by side: graph left, plot right */
+  gap: 4px;          /* Gap between network and Vega plot - unified with sidebar gap */
+}
+
+/* When sidebar is collapsed, content automatically expands due to flex: 1 */
+.astrolabe-wrapper.sidebar-collapsed .astrolabe-content {
+  /* No width override needed - flex handles it */
+}
+
+/* Network graph container (left) */
+.astrolabe-graph-container {
+  flex: 1 1 50%;
+  min-width: 300px;
+  height: 100%;
+  min-height: 400px;
+  max-height: 100%;
+  border: 2px solid var(--astrolabe-graph-border);
+  background: var(--astrolabe-graph-bg);
+  border-radius: var(--astrolabe-radius-lg);
+  position: relative;
+  isolation: isolate;
+  transition: background-color var(--astrolabe-transition-normal), border-color var(--astrolabe-transition-normal);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Keep the force graph under the absolutely positioned controls (some WebViews stack SVG last). */
+.astrolabe-graph-container > svg {
+  position: relative;
+  z-index: 0;
+}
+
+/* Vega plot container (right) */
+.astrolabe-plot-container {
+  flex: 1 1 50%;
+  min-width: 300px;
+  height: 100%;
+  min-height: 400px;
+  max-height: 100%;
+  border: 2px solid var(--astrolabe-graph-border);
+  background: var(--astrolabe-graph-bg);
+  border-radius: var(--astrolabe-radius-lg);
+  position: relative;
+  transition: background-color var(--astrolabe-transition-normal), border-color var(--astrolabe-transition-normal);
+  overflow: auto;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  padding: 6px 4px;
+}
+
+.astrolabe-plot-container:empty::before {
+  content: "Click nodes in the network graph to see details.";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--astrolabe-text-secondary);
+  font-size: 14px;
+}
+
+.astrolabe-colorbar {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Plot Mode Toggle Button - Position above colorbar on right side */
+.astrolabe-plot-mode-toggle-btn {
+  position: absolute;
+  top: 12px;           /* Top margin - adjust this value for positioning */
+  right: 12px;         /* Right margin - adjust this value for positioning */
+  padding: 5px 12px;
+  cursor: pointer;
+  border: 1px solid var(--astrolabe-border);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  border-radius: var(--astrolabe-radius-md);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  transition: all var(--astrolabe-transition-fast);
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .astrolabe-plot-mode-toggle-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-plot-mode-toggle-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  border-color: var(--astrolabe-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .astrolabe-plot-mode-toggle-btn:hover {
+  background: rgba(37, 41, 54, 0.95);
+}
+
+.astrolabe-plot-mode-toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Enhanced border visibility */
+.astrolabe-sidebar,
+.astrolabe-graph-container,
+.astrolabe-plot-container {
+  border-color: #d0d7de;
+}
+
+[data-theme="dark"] .astrolabe-sidebar,
+[data-theme="dark"] .astrolabe-graph-container,
+[data-theme="dark"] .astrolabe-plot-container {
+  border-color: #4a4f5e;
+}
+
+/* Controls section removed - buttons moved to sidebar */
+
+/* ===== Tooltip ===== */
+.astrolabe-tooltip {
+  position: fixed;
+  text-align: center;
+  padding: 8px 10px;
+  font: 12px sans-serif;
+  background: rgba(211, 211, 211, 0.95);
+  color: #212529;
+  border: 0px;
+  border-radius: var(--astrolabe-radius-lg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--astrolabe-transition-fast);
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .astrolabe-tooltip {
+  background: rgba(10, 10, 10, 0.98);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* ===== Network Graph Node Labels ===== */
+.node-label {
+  font-size: 10px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1200px) {
+  .astrolabe-sidebar {
+    width: 35%;
+  }
+  
+  .astrolabe-content {
+    width: 65%;
+  }
+}
+
+@media (max-width: 768px) {
+  .astrolabe-wrapper {
+    flex-direction: column;
+  }
+  
+  .astrolabe-sidebar {
+    width: 100%;
+    height: 40%;
+    border-right: none;
+    border-bottom: 1px solid var(--astrolabe-sidebar-border);
+  }
+  
+  .astrolabe-content {
+    width: 100%;
+    height: 60%;
+  }
+}
+
+/* ===== Network Graph Help Button ===== */
+.astrolabe-network-help-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid var(--astrolabe-border);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--astrolabe-transition-fast);
+  z-index: 1002;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .astrolabe-network-help-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-network-help-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .astrolabe-network-help-btn:hover {
+  background: rgba(37, 41, 54, 0.95);
+}
+
+/* Help Panel */
+.astrolabe-help-panel {
+  position: absolute;
+  top: 36px;
+  right: 8px;
+  width: 280px;
+  max-height: 500px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--astrolabe-border);
+  border-radius: var(--astrolabe-radius-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1003;
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .astrolabe-help-panel {
+  background: rgba(26, 29, 41, 0.95);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-help-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--astrolabe-border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--astrolabe-text-primary);
+}
+
+.astrolabe-help-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--astrolabe-text-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all var(--astrolabe-transition-fast);
+}
+
+.astrolabe-help-close:hover {
+  background: var(--astrolabe-feature-bg-hover);
+  color: var(--astrolabe-text-primary);
+}
+
+.astrolabe-help-content {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--astrolabe-text-primary);
+  line-height: 1.6;
+}
+
+.astrolabe-help-item {
+  margin-bottom: 16px;
+}
+
+.astrolabe-help-item:last-child {
+  margin-bottom: 0;
+}
+
+.astrolabe-help-item strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--astrolabe-text-primary);
+  font-size: 13px;
+}
+
+/* Floating plot controls stack (above Vega canvas layer; align with graph chrome z-index ~1002) */
+.astrolabe-plot-floating-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1002;
+  isolation: isolate;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.astrolabe-plot-floating-controls > * {
+  pointer-events: auto;
+}
+
+/* Mode toggle inside stack — layout + current-mode accent ring */
+.astrolabe-plot-floating-controls .astrolabe-plot-mode-toggle-btn {
+  position: relative;
+  top: auto;
+  right: auto;
+  border-color: var(--astrolabe-accent-primary);
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.astrolabe-vega-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* Icon buttons — same footprint as .astrolabe-theme-toggle-btn / network panel */
+.astrolabe-plot-floating-controls .astrolabe-chart-icon-btn {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid var(--astrolabe-border);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--astrolabe-text-primary);
+  border-radius: 50%;
+  font-size: 13px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--astrolabe-transition-fast);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .astrolabe-plot-floating-controls .astrolabe-chart-icon-btn {
+  background: rgba(26, 29, 41, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-plot-floating-controls .astrolabe-chart-icon-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  border-color: var(--astrolabe-accent-primary);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .astrolabe-plot-floating-controls .astrolabe-chart-icon-btn:hover {
+  background: rgba(37, 41, 54, 0.95);
+}
+
+.astrolabe-plot-floating-controls .astrolabe-chart-icon-btn:active {
+  transform: scale(1);
+}
+
+.astrolabe-plot-floating-controls .astrolabe-chart-icon-btn:focus-visible {
+  outline: 2px solid var(--astrolabe-accent-primary);
+  outline-offset: 2px;
+}
+
+.astrolabe-plot-floating-controls .astrolabe-range-toggle-btn[aria-pressed="true"] {
+  border-color: var(--astrolabe-accent-primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--astrolabe-accent-primary) 35%, transparent);
+}
+
+/* LOWESS on = accent ring; icon stays 📈 in both states */
+.astrolabe-plot-floating-controls .astrolabe-smooth-toggle-btn[aria-pressed="true"] {
+  border-color: var(--astrolabe-accent-primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--astrolabe-accent-primary) 35%, transparent);
+}
+
+.astrolabe-plot-floating-controls .astrolabe-smooth-toggle-btn[aria-pressed="false"] {
+  opacity: 1;
+}
+
+.astrolabe-range-popover {
+  position: absolute;
+  top: 36px;
+  right: 8px;
+  z-index: 1004;
+  min-width: 220px;
+  padding: 8px;
+  border: 1px solid var(--astrolabe-border);
+  border-radius: var(--astrolabe-radius-md);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .astrolabe-range-popover {
+  background: rgba(26, 29, 41, 0.96);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.astrolabe-range-row {
+  display: grid;
+  grid-template-columns: 38px 1fr 38px 1fr;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.astrolabe-range-row label {
+  font-size: 11px;
+  color: var(--astrolabe-text-secondary);
+}
+
+.astrolabe-range-row input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  height: 24px;
+  padding: 2px 6px;
+  font-size: 11px;
+  border: 1px solid var(--astrolabe-border);
+  border-radius: 4px;
+  background: var(--astrolabe-bg-primary);
+  color: var(--astrolabe-text-primary);
+}
+
+.astrolabe-range-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.astrolabe-range-actions button {
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--astrolabe-border);
+  border-radius: 4px;
+  background: var(--astrolabe-bg-secondary);
+  color: var(--astrolabe-text-primary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.astrolabe-range-actions button:hover {
+  border-color: var(--astrolabe-accent-primary);
+}
+
+.astrolabe-help-item ul {
+  margin: 6px 0 0 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.astrolabe-help-item li {
+  margin-bottom: 4px;
+  color: var(--astrolabe-text-secondary);
+}
+
+/* ===== Ablation Study Styles ===== */
+/* Ablation indicator (?) on nodes */
+.ablation-indicator {
+  cursor: help;
+}
+
+/* Excluded node indicator */
+.excluded-node-indicator text {
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Style for nodes in ablation view */
+[data-ablation-view="true"] .node-circle.excluded {
+  opacity: 0.3;
+  stroke-dasharray: 5, 5;
+  stroke-width: 2px;
+}
+
+[data-ablation-view="true"] .node-label.excluded {
+  opacity: 0.3;
+}

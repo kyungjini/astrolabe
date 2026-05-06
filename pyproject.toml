@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astrolabe-vis"
+version = "0.1.0"
+description = "Interactive Feature Interaction Networks for Tabular Model Interpretation."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=1.5",
+    "numpy>=1.23",
+    "scikit-learn>=1.2",
+    "xgboost==3.0.1",
+    "shap>=0.42",
+    "joblib>=1.2",
+    "anywidget>=0.9",
+    "traitlets>=5.9",
+    "tqdm>=4.65",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["astrolabe*"]
+
+[tool.setuptools.package-data]
+astrolabe = ["static/*.js", "static/*.css"]
